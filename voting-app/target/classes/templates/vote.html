@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Vote for a Color</title>
+</head>
+<body>
+<h1>Vote for your favorite color</h1>
+
+<p>Logged in as <strong th:text="${username}">[username]</strong></p>
+
+<button onclick="castVote('blue')">Blue</button>
+<button onclick="castVote('green')">Green</button>
+
+<script>
+  function castVote(candidate) {
+    const username = new URLSearchParams(window.location.search).get("username");
+
+    fetch("/api/vote", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userId: username,
+        candidate: candidate
+      })
+    })
+            .then(response => {
+              if (response.ok) {
+                window.location.href = "http://localhost:8084"; // redirect to results app
+              } else {
+                alert("Vote failed. Please try again.");
+              }
+            });
+  }
+</script>
+</body>
+</html>
